@@ -343,130 +343,6 @@
       50% { width: 70%; }
       100% { width: 100%; }
     }
-
-    #workspacePanel {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      background: #000;
-      z-index: 100;
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 56px;
-      padding: 0 24px;
-      background: #050606;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      user-select: none;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-logo-box {
-      width: 28px;
-      height: 28px;
-      border: 1.5px solid rgba(0, 255, 70, 0.36);
-      border-radius: 6px;
-      background: rgba(0, 255, 70, 0.05);
-    }
-
-    .nav-brand {
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      color: #ffffff;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .user-capsule {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px 4px 6px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 9999px;
-      height: 32px;
-    }
-
-    .user-avatar {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #00ff46;
-      color: #001a07;
-      display: grid;
-      place-items: center;
-      font-size: 0.72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      box-shadow: 0 0 10px rgba(0, 255, 70, 0.3);
-    }
-
-    .user-name {
-      font-size: 0.78rem;
-      color: rgba(255, 255, 255, 0.85);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-
-    .nav-icon-btn {
-      width: 32px;
-      height: 32px;
-      background: transparent;
-      border: 0;
-      color: rgba(255, 255, 255, 0.38);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      padding: 0;
-      border-radius: 4px;
-      transition: color 0.2s, background-color 0.2s;
-    }
-
-    .nav-icon-btn:hover {
-      color: rgba(255, 255, 255, 0.85);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .nav-icon-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-    }
-
-    .nav-icon-btn .icon-green {
-      color: #00ff46;
-    }
-
-    .nav-icon-btn svg[fill="currentColor"] {
-      fill: currentColor;
-      stroke: none;
-    }
-
-    .workspace-content {
-      flex: 1;
-      overflow: auto;
-      background:
-        radial-gradient(circle at center, rgba(0, 255, 68, 0.02), transparent 30rem),
-        radial-gradient(circle at center, #090a0a 0%, #030404 60%, #000 100%);
-    }
   </style>
 </head>
 <body>
@@ -579,42 +455,7 @@
   </main>
 
   <div id="workspacePanel" class="hidden">
-    <header class="navbar">
-      <div class="nav-left">
-        <div class="nav-logo-box"></div>
-        <span class="nav-brand">IXKHLM</span>
-      </div>
-      <div class="nav-right">
-        <div class="user-capsule">
-          <div class="user-avatar" id="navAvatar">U</div>
-          <span class="user-name" id="navUsername">Username</span>
-        </div>
-        
-        <button class="nav-icon-btn" aria-label="Globe" type="button">
-          <svg viewBox="0 0 24 24" class="icon-green">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M2.5 12h19M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-        </button>
-
-        <button class="nav-icon-btn" aria-label="Theme" type="button">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-
-        <button class="nav-icon-btn" id="logoutButton" aria-label="Logout" type="button">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <main class="workspace-content">
-      <!-- Blank container for future wiki dashboard -->
-    </main>
+    <!-- Blank container for future wiki dashboard -->
   </div>
 
   <script>
@@ -645,9 +486,6 @@
     const registerError = document.getElementById("registerError");
     const loaderBar = document.getElementById("loaderBar");
     const workspacePanel = document.getElementById("workspacePanel");
-    const navUsername = document.getElementById("navUsername");
-    const navAvatar = document.getElementById("navAvatar");
-    const logoutButton = document.getElementById("logoutButton");
 
     let currentKey = localStorage.getItem("ixkhlm_access_key") || "";
 
@@ -680,10 +518,6 @@
       const savedKey = localStorage.getItem("ixkhlm_access_key") || currentKey;
 
       if (enteredKey === savedKey && savedKey !== "") {
-        // Delete access key from storage and memory immediately (single use)
-        localStorage.removeItem("ixkhlm_access_key");
-        currentKey = "";
-
         // Reset registration panel states to pristine
         regUsername.value = "";
         regPassword.value = "";
@@ -814,20 +648,12 @@
       }
 
       // 3. Password length check
-      if (password.length < 8) {
-        showRegisterError("Password must be at least 8 characters long.", ["passwordField", "confirmPasswordField"]);
+      if (password.length < 6) {
+        showRegisterError("Password must be at least 6 characters long.", ["passwordField", "confirmPasswordField"]);
         return;
       }
 
-      // 4. Password complexity check (minimum 1 letter and 1 number/digit)
-      const hasLetter = /[a-zA-Z]/.test(password);
-      const hasDigit = /\d/.test(password);
-      if (!hasLetter || !hasDigit) {
-        showRegisterError("Password must contain at least one letter and one number.", ["passwordField", "confirmPasswordField"]);
-        return;
-      }
-
-      // 5. Confirm Password mismatch check
+      // 4. Confirm Password mismatch check
       if (password !== confirmPassword) {
         showRegisterError("Passwords do not match.", ["passwordField", "confirmPasswordField"]);
         return;
@@ -847,10 +673,6 @@
 
       // Redirect into terminal workspace after 2 seconds loader animation
       setTimeout(() => {
-        // Set user profile capsule details
-        navUsername.textContent = username;
-        navAvatar.textContent = username.charAt(0).toUpperCase();
-
         setupPanel.classList.add("hidden");
         workspacePanel.classList.remove("hidden");
       }, 2000);
@@ -872,13 +694,6 @@
       if (e.key === "Enter") {
         handleAuthenticate();
       }
-    });
-
-    // Handle logout button click
-    logoutButton.addEventListener("click", () => {
-      workspacePanel.classList.add("hidden");
-      card.classList.remove("hidden");
-      showLoginPanel();
     });
   </script>
 </body>
