@@ -270,6 +270,79 @@
       border-color: rgba(255, 0, 70, 0.6) !important;
       box-shadow: 0 0 16px rgba(255, 0, 70, 0.24) !important;
     }
+
+    .info-note {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.42);
+      margin-bottom: 20px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .error-text {
+      color: #ff3b69;
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-align: center;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255, 59, 105, 0.3);
+    }
+
+    .success-icon {
+      border-color: rgba(0, 255, 70, 0.6) !important;
+      color: #00ff46 !important;
+      background: rgba(0, 255, 70, 0.15) !important;
+      box-shadow: 0 0 30px rgba(0, 255, 70, 0.25) !important;
+    }
+
+    .success-title {
+      background: linear-gradient(90deg, #00ff46 0%, #72ff91 100%) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+    }
+
+    .success-message {
+      text-align: center;
+      margin: 24px 0;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .success-sub {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 8px;
+      font-weight: 400;
+    }
+
+    .terminal-loader {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .loader-bar {
+      width: 0%;
+      height: 100%;
+      background: #00ff46;
+      box-shadow: 0 0 12px #00ff46;
+    }
+
+    .loader-active {
+      animation: loadWorkspace 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes loadWorkspace {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -323,8 +396,66 @@
     </section>
   </main>
 
-  <div id="setupPanel" class="hidden">
-    <!-- Blank container for future account setup screen -->
+  <main id="setupPanel" class="card hidden">
+    <section id="registerPanel">
+      <div class="title-row">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+        <h1>Registration</h1>
+      </div>
+
+      <div class="info-note">Enter system credentials. Username must be alphanumeric (no spaces), max 10 characters.</div>
+
+      <div class="field" id="usernameField">
+        <input id="regUsername" type="text" placeholder="username" autocomplete="off" maxlength="10">
+      </div>
+
+      <div class="field" id="passwordField">
+        <input id="regPassword" type="password" placeholder="password" autocomplete="off">
+        <button class="lock" id="toggleRegPassword" type="button" aria-label="Show password">
+          <svg id="regLockIcon" viewBox="0 0 24 24">
+            <rect x="6" y="10" width="12" height="10" rx="2"></rect>
+            <path d="M8 10V8a4 4 0 0 1 8 0v2"></path>
+            <path d="M12 14v3"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="field" id="confirmPasswordField">
+        <input id="regConfirmPassword" type="password" placeholder="confirm password" autocomplete="off">
+      </div>
+
+      <div id="registerError" class="error-text hidden"></div>
+
+      <button class="auth-button" id="registerButton" type="button">Initialize System</button>
+      <button class="key-button" id="lockTerminalButton" type="button">Lock Terminal</button>
+      <div class="divider"></div>
+    </section>
+
+    <section id="successPanel" class="hidden">
+      <div class="title-row">
+        <div class="icon-box success-icon">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+            <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+        </div>
+        <h1 class="success-title">Success</h1>
+      </div>
+      <div class="success-message">
+        <p>SYSTEM INITIALIZED</p>
+        <p class="success-sub">Loading secure terminal workspace...</p>
+      </div>
+      <div class="terminal-loader">
+        <div class="loader-bar" id="loaderBar"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="workspacePanel" class="hidden">
+    <!-- Blank container for future wiki dashboard -->
   </div>
 
   <script>
@@ -341,6 +472,20 @@
     const copyButton = document.getElementById("copyButton");
     const downloadButton = document.getElementById("downloadButton");
     const proceedButton = document.getElementById("proceedButton");
+
+    // Registration UI elements
+    const registerPanel = document.getElementById("registerPanel");
+    const successPanel = document.getElementById("successPanel");
+    const regUsername = document.getElementById("regUsername");
+    const regPassword = document.getElementById("regPassword");
+    const regConfirmPassword = document.getElementById("regConfirmPassword");
+    const toggleRegPassword = document.getElementById("toggleRegPassword");
+    const regLockIcon = document.getElementById("regLockIcon");
+    const registerButton = document.getElementById("registerButton");
+    const lockTerminalButton = document.getElementById("lockTerminalButton");
+    const registerError = document.getElementById("registerError");
+    const loaderBar = document.getElementById("loaderBar");
+    const workspacePanel = document.getElementById("workspacePanel");
 
     let currentKey = localStorage.getItem("ixkhlm_access_key") || "";
 
@@ -373,7 +518,16 @@
       const savedKey = localStorage.getItem("ixkhlm_access_key") || currentKey;
 
       if (enteredKey === savedKey && savedKey !== "") {
-        // Authenticated successfully! Hide card, show blank setup screen
+        // Reset registration panel states to pristine
+        regUsername.value = "";
+        regPassword.value = "";
+        regConfirmPassword.value = "";
+        clearRegisterError();
+        registerPanel.classList.remove("hidden");
+        successPanel.classList.add("hidden");
+        loaderBar.classList.remove("loader-active");
+
+        // Authenticated successfully! Hide login card, show registration setup card
         card.classList.add("hidden");
         setupPanel.classList.remove("hidden");
       } else {
@@ -419,6 +573,120 @@
     });
 
     proceedButton.addEventListener("click", showLoginPanel);
+
+    // Registration helper database methods
+    function getAccounts() {
+      const data = localStorage.getItem("ixkhlm_accounts");
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem("ixkhlm_accounts", JSON.stringify(accounts));
+    }
+
+    function showRegisterError(message, targetFields = []) {
+      registerError.textContent = message;
+      registerError.classList.remove("hidden");
+      
+      targetFields.forEach(fieldId => {
+        const fieldEl = document.getElementById(fieldId);
+        if (fieldEl) {
+          fieldEl.classList.add("error-shake", "error-field");
+          setTimeout(() => {
+            fieldEl.classList.remove("error-shake", "error-field");
+          }, 400);
+        }
+      });
+    }
+
+    function clearRegisterError() {
+      registerError.textContent = "";
+      registerError.classList.add("hidden");
+    }
+
+    toggleRegPassword.addEventListener("click", () => {
+      const isHidden = regPassword.type === "password";
+      regPassword.type = isHidden ? "text" : "password";
+      regConfirmPassword.type = isHidden ? "text" : "password";
+      toggleRegPassword.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+
+      regLockIcon.innerHTML = isHidden
+        ? '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 7.5-2"></path><path d="M12 14v3"></path>'
+        : '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 8 0v2"></path><path d="M12 14v3"></path>';
+    });
+
+    lockTerminalButton.addEventListener("click", () => {
+      regUsername.value = "";
+      regPassword.value = "";
+      regConfirmPassword.value = "";
+      clearRegisterError();
+      setupPanel.classList.add("hidden");
+      card.classList.remove("hidden");
+      showLoginPanel();
+    });
+
+    function handleRegister() {
+      clearRegisterError();
+
+      const username = regUsername.value.trim();
+      const password = regPassword.value;
+      const confirmPassword = regConfirmPassword.value;
+
+      // 1. Username alphanumeric structure and size checks (3-10 chars)
+      const usernameRegex = /^[a-zA-Z0-9]{3,10}$/;
+      if (!usernameRegex.test(username)) {
+        showRegisterError("Username must be alphanumeric (no spaces) and 3 to 10 characters long.", ["usernameField"]);
+        return;
+      }
+
+      // 2. Uniqueness check (case-insensitive)
+      const accounts = getAccounts();
+      const duplicate = accounts.some(acc => acc.username.toLowerCase() === username.toLowerCase());
+      if (duplicate) {
+        showRegisterError("Username is already taken.", ["usernameField"]);
+        return;
+      }
+
+      // 3. Password length check
+      if (password.length < 6) {
+        showRegisterError("Password must be at least 6 characters long.", ["passwordField", "confirmPasswordField"]);
+        return;
+      }
+
+      // 4. Confirm Password mismatch check
+      if (password !== confirmPassword) {
+        showRegisterError("Passwords do not match.", ["passwordField", "confirmPasswordField"]);
+        return;
+      }
+
+      // Save account registration details
+      accounts.push({
+        username: username,
+        password: password
+      });
+      saveAccounts(accounts);
+
+      // Transition to success loader state
+      registerPanel.classList.add("hidden");
+      successPanel.classList.remove("hidden");
+      loaderBar.classList.add("loader-active");
+
+      // Redirect into terminal workspace after 2 seconds loader animation
+      setTimeout(() => {
+        setupPanel.classList.add("hidden");
+        workspacePanel.classList.remove("hidden");
+      }, 2000);
+    }
+
+    registerButton.addEventListener("click", handleRegister);
+
+    [regUsername, regPassword, regConfirmPassword].forEach(input => {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          handleRegister();
+        }
+      });
+    });
     
     // Add authentication button and Enter key listeners
     authButton.addEventListener("click", handleAuthenticate);
