@@ -87,15 +87,38 @@
 
     h1 {
       margin: 0;
-      color: #eaffef;
       font-size: 1.22rem;
       line-height: 1;
       letter-spacing: 0.13em;
       text-transform: uppercase;
+      background: linear-gradient(
+        90deg,
+        #eaffef 0%,
+        #eaffef 38%,
+        #00ff46 50%,
+        #eaffef 62%,
+        #eaffef 100%
+      );
+      background-size: 220% 100%;
+      background-position: 100% 0;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: textSweep 2.4s linear infinite;
     }
 
     h1 span {
-      color: #00ff46;
+      color: inherit;
+    }
+
+    @keyframes textSweep {
+      from {
+        background-position: 100% 0;
+      }
+
+      to {
+        background-position: -120% 0;
+      }
     }
 
     .field {
