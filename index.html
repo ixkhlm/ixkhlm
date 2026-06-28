@@ -5,79 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ixkhlm.wiki</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
     body {
       margin: 0;
-      min-height: 100vh;
-      background: #000;
-      color: #fff;
+      min-height: 100%;
+    }
+
+    body {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.025) 25%, transparent 25%) 0 0 / 18px 18px,
+        linear-gradient(135deg, transparent 75%, rgba(255,255,255,0.018) 75%) 0 0 / 18px 18px,
+        #101214;
+      color: #f2f2f2;
       overflow: hidden;
-      font-family: "Comic Sans MS", "Comic Sans", cursive;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .page {
       position: relative;
       min-height: 100vh;
-      border: 2px solid rgba(170, 205, 255, 0.9);
     }
 
     .login-button {
       position: absolute;
-      top: -8px;
-      right: -8px;
-      padding: 14px 36px 18px;
-      color: #fff;
-      background: transparent;
-      border: 8px solid #fff;
-      border-radius: 0 0 0 28px;
+      top: 0;
+      right: 0;
+      min-width: 210px;
+      height: 86px;
+      padding: 0 30px;
+      color: #f2f2f2;
+      background: rgba(255, 255, 255, 0.035);
+      border: 2px solid rgba(255, 255, 255, 0.88);
+      border-top: 0;
+      border-right: 0;
+      border-radius: 0;
       font: inherit;
-      font-size: clamp(2.4rem, 6vw, 5.5rem);
-      line-height: 0.9;
+      font-size: clamp(2rem, 4vw, 4rem);
+      font-weight: 300;
+      letter-spacing: 0.02em;
       cursor: pointer;
-      transform: rotate(4deg);
-      text-decoration: underline;
-      text-decoration-thickness: 5px;
-      text-underline-offset: 10px;
     }
 
     .login-button:hover {
       background: rgba(255, 255, 255, 0.08);
     }
 
-    .welcome {
-      position: absolute;
-      top: 43%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(2deg);
-      margin: 0;
-      font-size: clamp(4rem, 10vw, 9rem);
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
+    .login-button:active {
+      background: rgba(255, 255, 255, 0.12);
     }
 
-    .bottom-line {
+    .welcome {
       position: absolute;
-      left: 39%;
-      bottom: -4px;
-      width: 38%;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.65);
-      border-radius: 999px;
+      top: 48%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      font-size: clamp(4rem, 9vw, 9rem);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      white-space: nowrap;
     }
 
     @media (max-width: 700px) {
       .login-button {
-        padding: 10px 22px 14px;
-        border-width: 5px;
+        min-width: 145px;
+        height: 62px;
+        padding: 0 18px;
+        font-size: 2rem;
       }
 
       .welcome {
-        font-size: clamp(3.4rem, 18vw, 6rem);
-      }
-
-      .bottom-line {
-        left: 28%;
-        width: 50%;
+        font-size: clamp(3rem, 16vw, 5rem);
       }
     }
   </style>
@@ -86,7 +89,6 @@
   <main class="page">
     <button class="login-button" type="button">login</button>
     <h1 class="welcome">welcome</h1>
-    <div class="bottom-line"></div>
   </main>
 </body>
 </html>
