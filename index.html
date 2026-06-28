@@ -521,47 +521,7 @@
   </main>
 
   <main id="setupPanel" class="card hidden">
-    <!-- User Login Panel (New default screen) -->
-    <section id="loginUserPanel">
-      <div class="title-row">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-        </div>
-        <h1>Authentication</h1>
-      </div>
-
-      <div class="info-note">Access terminal workspace. Enter username and password.</div>
-
-      <div class="field" id="loginUsernameField">
-        <input id="loginUsername" type="text" placeholder="username" autocomplete="off" maxlength="10">
-      </div>
-
-      <div class="field" id="loginPasswordField">
-        <input id="loginPassword" type="password" placeholder="password" autocomplete="off">
-        <button class="lock" id="toggleLoginPassword" type="button" aria-label="Show password">
-          <svg id="loginLockIcon" viewBox="0 0 24 24">
-            <rect x="6" y="10" width="12" height="10" rx="2"></rect>
-            <path d="M8 10V8a4 4 0 0 1 8 0v2"></path>
-            <path d="M12 14v3"></path>
-          </svg>
-        </button>
-      </div>
-
-      <div id="loginUserError" class="error-text hidden"></div>
-
-      <button class="auth-button" id="loginUserButton" type="button">Authenticate User</button>
-      
-      <div class="button-row">
-        <button class="secondary-button" id="toggleToRegisterButton" type="button">Create Account</button>
-        <button class="secondary-button" id="lockTerminalFromLoginButton" type="button">Lock Terminal</button>
-      </div>
-      <div class="divider"></div>
-    </section>
-
-    <!-- Registration Panel -->
-    <section id="registerPanel" class="hidden">
+    <section id="registerPanel">
       <div class="title-row">
         <div class="icon-box">
           <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
@@ -595,11 +555,7 @@
       <div id="registerError" class="error-text hidden"></div>
 
       <button class="auth-button" id="registerButton" type="button">Initialize System</button>
-      
-      <div class="button-row">
-        <button class="secondary-button" id="toggleToLoginButton" type="button">Back To Login</button>
-        <button class="secondary-button" id="lockTerminalFromRegButton" type="button">Lock Terminal</button>
-      </div>
+      <button class="key-button" id="lockTerminalButton" type="button">Lock Terminal</button>
       <div class="divider"></div>
     </section>
 
@@ -613,8 +569,8 @@
         <h1 class="success-title">Success</h1>
       </div>
       <div class="success-message">
-        <p id="successStatus">SYSTEM INITIALIZED</p>
-        <p class="success-sub" id="successStatusSub">Loading secure terminal workspace...</p>
+        <p>SYSTEM INITIALIZED</p>
+        <p class="success-sub">Loading secure terminal workspace...</p>
       </div>
       <div class="terminal-loader">
         <div class="loader-bar" id="loaderBar"></div>
@@ -676,35 +632,17 @@
     const downloadButton = document.getElementById("downloadButton");
     const proceedButton = document.getElementById("proceedButton");
 
-    // Registration & Login UI elements
-    const loginUserPanel = document.getElementById("loginUserPanel");
+    // Registration UI elements
     const registerPanel = document.getElementById("registerPanel");
     const successPanel = document.getElementById("successPanel");
-    
-    // Login fields & buttons
-    const loginUsername = document.getElementById("loginUsername");
-    const loginPassword = document.getElementById("loginPassword");
-    const toggleLoginPassword = document.getElementById("toggleLoginPassword");
-    const loginLockIcon = document.getElementById("loginLockIcon");
-    const loginUserButton = document.getElementById("loginUserButton");
-    const toggleToRegisterButton = document.getElementById("toggleToRegisterButton");
-    const lockTerminalFromLoginButton = document.getElementById("lockTerminalFromLoginButton");
-    const loginUserError = document.getElementById("loginUserError");
-
-    // Register fields & buttons
     const regUsername = document.getElementById("regUsername");
     const regPassword = document.getElementById("regPassword");
     const regConfirmPassword = document.getElementById("regConfirmPassword");
     const toggleRegPassword = document.getElementById("toggleRegPassword");
     const regLockIcon = document.getElementById("regLockIcon");
     const registerButton = document.getElementById("registerButton");
-    const toggleToLoginButton = document.getElementById("toggleToLoginButton");
-    const lockTerminalFromRegButton = document.getElementById("lockTerminalFromRegButton");
+    const lockTerminalButton = document.getElementById("lockTerminalButton");
     const registerError = document.getElementById("registerError");
-    
-    // Success & Workspace UI elements
-    const successStatus = document.getElementById("successStatus");
-    const successStatusSub = document.getElementById("successStatusSub");
     const loaderBar = document.getElementById("loaderBar");
     const workspacePanel = document.getElementById("workspacePanel");
     const navUsername = document.getElementById("navUsername");
@@ -746,15 +684,16 @@
         localStorage.removeItem("ixkhlm_access_key");
         currentKey = "";
 
-        // Reset panels to default user login state
-        resetLoginUserPanel();
-        resetRegisterPanel();
-        loginUserPanel.classList.remove("hidden");
-        registerPanel.classList.add("hidden");
+        // Reset registration panel states to pristine
+        regUsername.value = "";
+        regPassword.value = "";
+        regConfirmPassword.value = "";
+        clearRegisterError();
+        registerPanel.classList.remove("hidden");
         successPanel.classList.add("hidden");
         loaderBar.classList.remove("loader-active");
 
-        // Authenticated successfully! Hide access key card, show setup/login screen
+        // Authenticated successfully! Hide login card, show registration setup card
         card.classList.add("hidden");
         setupPanel.classList.remove("hidden");
       } else {
@@ -801,7 +740,7 @@
 
     proceedButton.addEventListener("click", showLoginPanel);
 
-    // Database helper methods
+    // Registration helper database methods
     function getAccounts() {
       const data = localStorage.getItem("ixkhlm_accounts");
       return data ? JSON.parse(data) : [];
@@ -811,79 +750,6 @@
       localStorage.setItem("ixkhlm_accounts", JSON.stringify(accounts));
     }
 
-    // Login logic & helpers
-    function showLoginUserError(message, targetFields = []) {
-      loginUserError.textContent = message;
-      loginUserError.classList.remove("hidden");
-      
-      targetFields.forEach(fieldId => {
-        const fieldEl = document.getElementById(fieldId);
-        if (fieldEl) {
-          fieldEl.classList.add("error-shake", "error-field");
-          setTimeout(() => {
-            fieldEl.classList.remove("error-shake", "error-field");
-          }, 400);
-        }
-      });
-    }
-
-    function clearLoginUserError() {
-      loginUserError.textContent = "";
-      loginUserError.classList.add("hidden");
-    }
-
-    function resetLoginUserPanel() {
-      loginUsername.value = "";
-      loginPassword.value = "";
-      clearLoginUserError();
-    }
-
-    toggleLoginPassword.addEventListener("click", () => {
-      const isHidden = loginPassword.type === "password";
-      loginPassword.type = isHidden ? "text" : "password";
-      toggleLoginPassword.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
-
-      loginLockIcon.innerHTML = isHidden
-        ? '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 7.5-2"></path><path d="M12 14v3"></path>'
-        : '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 8 0v2"></path><path d="M12 14v3"></path>';
-    });
-
-    function handleLoginUser() {
-      clearLoginUserError();
-
-      const username = loginUsername.value.trim();
-      const password = loginPassword.value;
-
-      if (username === "" || password === "") {
-        showLoginUserError("Please enter both username and password.", ["loginUsernameField", "loginPasswordField"]);
-        return;
-      }
-
-      const accounts = getAccounts();
-      const account = accounts.find(acc => acc.username.toLowerCase() === username.toLowerCase() && acc.password === password);
-
-      if (account) {
-        // Authenticated successfully! 
-        successStatus.textContent = "ACCESS GRANTED";
-        successStatusSub.textContent = "Loading secure terminal workspace...";
-        
-        loginUserPanel.classList.add("hidden");
-        successPanel.classList.remove("hidden");
-        loaderBar.classList.add("loader-active");
-
-        setTimeout(() => {
-          navUsername.textContent = account.username;
-          navAvatar.textContent = account.username.charAt(0).toUpperCase();
-
-          setupPanel.classList.add("hidden");
-          workspacePanel.classList.remove("hidden");
-        }, 2000);
-      } else {
-        showLoginUserError("Invalid username or password.", ["loginUsernameField", "loginPasswordField"]);
-      }
-    }
-
-    // Registration logic & helpers
     function showRegisterError(message, targetFields = []) {
       registerError.textContent = message;
       registerError.classList.remove("hidden");
@@ -904,13 +770,6 @@
       registerError.classList.add("hidden");
     }
 
-    function resetRegisterPanel() {
-      regUsername.value = "";
-      regPassword.value = "";
-      regConfirmPassword.value = "";
-      clearRegisterError();
-    }
-
     toggleRegPassword.addEventListener("click", () => {
       const isHidden = regPassword.type === "password";
       regPassword.type = isHidden ? "text" : "password";
@@ -920,6 +779,16 @@
       regLockIcon.innerHTML = isHidden
         ? '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 7.5-2"></path><path d="M12 14v3"></path>'
         : '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 8 0v2"></path><path d="M12 14v3"></path>';
+    });
+
+    lockTerminalButton.addEventListener("click", () => {
+      regUsername.value = "";
+      regPassword.value = "";
+      regConfirmPassword.value = "";
+      clearRegisterError();
+      setupPanel.classList.add("hidden");
+      card.classList.remove("hidden");
+      showLoginPanel();
     });
 
     function handleRegister() {
@@ -972,9 +841,6 @@
       saveAccounts(accounts);
 
       // Transition to success loader state
-      successStatus.textContent = "SYSTEM INITIALIZED";
-      successStatusSub.textContent = "Loading secure terminal workspace... ...";
-      
       registerPanel.classList.add("hidden");
       successPanel.classList.remove("hidden");
       loaderBar.classList.add("loader-active");
@@ -990,45 +856,7 @@
       }, 2000);
     }
 
-    // Toggle Panels
-    toggleToRegisterButton.addEventListener("click", () => {
-      resetLoginUserPanel();
-      loginUserPanel.classList.add("hidden");
-      registerPanel.classList.remove("hidden");
-      regUsername.focus();
-    });
-
-    toggleToLoginButton.addEventListener("click", () => {
-      resetRegisterPanel();
-      registerPanel.classList.add("hidden");
-      loginUserPanel.classList.remove("hidden");
-      loginUsername.focus();
-    });
-
-    // Lock Terminal actions
-    function lockTerminal() {
-      resetLoginUserPanel();
-      resetRegisterPanel();
-      setupPanel.classList.add("hidden");
-      card.classList.remove("hidden");
-      showLoginPanel();
-    }
-
-    lockTerminalFromLoginButton.addEventListener("click", lockTerminal);
-    lockTerminalFromRegButton.addEventListener("click", lockTerminal);
-
-    // Event Listeners for Buttons & Submissions
-    loginUserButton.addEventListener("click", handleLoginUser);
     registerButton.addEventListener("click", handleRegister);
-
-    // Enter Key listeners for forms
-    [loginUsername, loginPassword].forEach(input => {
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          handleLoginUser();
-        }
-      });
-    });
 
     [regUsername, regPassword, regConfirmPassword].forEach(input => {
       input.addEventListener("keydown", (e) => {
