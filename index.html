@@ -130,13 +130,22 @@
       width: 100%;
       height: 48px;
       padding: 0 48px 0 16px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.72);
       background: rgba(0,0,0,0.24);
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 7px;
       outline: none;
       font: inherit;
       letter-spacing: 0.12em;
+    }
+
+    input:focus {
+      border-color: rgba(0,255,70,0.48);
+      box-shadow: 0 0 0 3px rgba(0,255,70,0.08);
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.28);
     }
 
     .lock {
@@ -152,6 +161,11 @@
       border-radius: 6px;
       color: #00ff46;
       background: rgba(0,255,70,0.08);
+      cursor: pointer;
+    }
+
+    .lock:hover {
+      background: rgba(0,255,70,0.16);
     }
 
     .lock svg {
@@ -224,19 +238,35 @@
     </div>
 
     <div class="field">
-      <input type="password" value="000000000000" readonly>
-      <div class="lock">
-        <svg viewBox="0 0 24 24">
+      <input id="accessKey" type="password" placeholder="enter key" autocomplete="off">
+      <button class="lock" id="toggleKey" type="button" aria-label="Show key">
+        <svg id="lockIcon" viewBox="0 0 24 24">
           <rect x="6" y="10" width="12" height="10" rx="2"></rect>
           <path d="M8 10V8a4 4 0 0 1 8 0v2"></path>
           <path d="M12 14v3"></path>
         </svg>
-      </div>
+      </button>
     </div>
 
     <button class="auth-button" type="button">Authenticate</button>
     <button class="key-button" type="button">Generate New Key</button>
     <div class="divider"></div>
   </main>
+
+  <script>
+    const accessKey = document.getElementById("accessKey");
+    const toggleKey = document.getElementById("toggleKey");
+    const lockIcon = document.getElementById("lockIcon");
+
+    toggleKey.addEventListener("click", () => {
+      const isHidden = accessKey.type === "password";
+      accessKey.type = isHidden ? "text" : "password";
+      toggleKey.setAttribute("aria-label", isHidden ? "Hide key" : "Show key");
+
+      lockIcon.innerHTML = isHidden
+        ? '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 7.5-2"></path><path d="M12 14v3"></path>'
+        : '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 8 0v2"></path><path d="M12 14v3"></path>';
+    });
+  </script>
 </body>
 </html>
