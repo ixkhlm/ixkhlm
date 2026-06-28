@@ -255,6 +255,21 @@
     .hidden {
       display: none;
     }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .error-shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    .error-field input {
+      border-color: rgba(255, 0, 70, 0.6) !important;
+      box-shadow: 0 0 16px rgba(255, 0, 70, 0.24) !important;
+    }
   </style>
 </head>
 <body>
@@ -280,7 +295,7 @@
         </button>
       </div>
 
-      <button class="auth-button" type="button">Authenticate</button>
+      <button class="auth-button" id="authButton" type="button">Authenticate</button>
       <button class="key-button" id="generateKeyButton" type="button">Generate New Key</button>
       <div class="divider"></div>
     </section>
@@ -308,19 +323,26 @@
     </section>
   </main>
 
+  <div id="setupPanel" class="hidden">
+    <!-- Blank container for future account setup screen -->
+  </div>
+
   <script>
+    const card = document.querySelector(".card");
     const loginPanel = document.getElementById("loginPanel");
     const keyPanel = document.getElementById("keyPanel");
+    const setupPanel = document.getElementById("setupPanel");
     const accessKey = document.getElementById("accessKey");
     const toggleKey = document.getElementById("toggleKey");
     const lockIcon = document.getElementById("lockIcon");
+    const authButton = document.getElementById("authButton");
     const generateKeyButton = document.getElementById("generateKeyButton");
     const generatedKey = document.getElementById("generatedKey");
     const copyButton = document.getElementById("copyButton");
     const downloadButton = document.getElementById("downloadButton");
     const proceedButton = document.getElementById("proceedButton");
 
-    let currentKey = "";
+    let currentKey = localStorage.getItem("ixkhlm_access_key") || "";
 
     function generateAccessKey() {
       const bytes = new Uint8Array(32);
@@ -333,6 +355,7 @@
 
     function showKeyPanel() {
       currentKey = generateAccessKey();
+      localStorage.setItem("ixkhlm_access_key", currentKey);
       generatedKey.textContent = currentKey.slice(0, 32) + "\n" + currentKey.slice(32);
       loginPanel.classList.add("hidden");
       keyPanel.classList.remove("hidden");
@@ -343,6 +366,26 @@
       loginPanel.classList.remove("hidden");
       keyPanel.classList.add("hidden");
       accessKey.focus();
+    }
+
+    function handleAuthenticate() {
+      const enteredKey = accessKey.value.trim();
+      const savedKey = localStorage.getItem("ixkhlm_access_key") || currentKey;
+
+      if (enteredKey === savedKey && savedKey !== "") {
+        // Authenticated successfully! Hide card, show blank setup screen
+        card.classList.add("hidden");
+        setupPanel.classList.remove("hidden");
+      } else {
+        // Failed authentication: shake field and add temporary error glow
+        const field = accessKey.closest(".field");
+        field.classList.add("error-shake", "error-field");
+        
+        // Remove error classes after animation completes
+        setTimeout(() => {
+          field.classList.remove("error-shake", "error-field");
+        }, 400);
+      }
     }
 
     toggleKey.addEventListener("click", () => {
@@ -376,6 +419,14 @@
     });
 
     proceedButton.addEventListener("click", showLoginPanel);
+    
+    // Add authentication button and Enter key listeners
+    authButton.addEventListener("click", handleAuthenticate);
+    accessKey.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        handleAuthenticate();
+      }
+    });
   </script>
 </body>
 </html>
