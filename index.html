@@ -5,12 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ixkhlm.wiki</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       min-height: 100%;
     }
@@ -47,7 +44,7 @@
       background: radial-gradient(circle at center, transparent 0%, transparent 45%, rgba(0,0,0,0.82) 100%);
     }
 
-    .auth-card {
+    .card {
       position: relative;
       z-index: 1;
       width: min(520px, calc(100vw - 32px));
@@ -100,25 +97,15 @@
         #eaffef 100%
       );
       background-size: 220% 100%;
-      background-position: 100% 0;
       color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
       animation: textSweep 2.4s linear infinite;
     }
 
-    h1 span {
-      color: inherit;
-    }
-
     @keyframes textSweep {
-      from {
-        background-position: 100% 0;
-      }
-
-      to {
-        background-position: -120% 0;
-      }
+      from { background-position: 100% 0; }
+      to { background-position: -120% 0; }
     }
 
     .field {
@@ -161,11 +148,6 @@
       border-radius: 6px;
       color: #00ff46;
       background: rgba(0,255,70,0.08);
-      cursor: pointer;
-    }
-
-    .lock:hover {
-      background: rgba(0,255,70,0.16);
     }
 
     .lock svg {
@@ -198,12 +180,8 @@
       background: #16ff57;
     }
 
-    .auth-button:active {
-      transform: translateY(1px);
-      background: #00d83d;
-    }
-
-    .key-button {
+    .key-button,
+    .proceed-button {
       display: block;
       width: fit-content;
       margin: 22px auto 0;
@@ -215,48 +193,157 @@
       letter-spacing: 0.1em;
     }
 
-    .key-button:hover {
-      color: #78ff98;
-    }
-
     .divider {
       height: 1px;
       margin-top: 24px;
       background: rgba(255,255,255,0.08);
     }
+
+    .label {
+      margin: 0 0 12px;
+      color: #00ff46;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .generated-key {
+      padding: 18px;
+      border: 1px dashed rgba(0,255,70,0.42);
+      border-radius: 9px;
+      color: #00ff46;
+      background: rgba(0,255,70,0.045);
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.7;
+      letter-spacing: 0.06em;
+      overflow-wrap: anywhere;
+      box-shadow: inset 0 0 22px rgba(0,255,70,0.04);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .secondary-button {
+      height: 42px;
+      border: 1px solid rgba(0,255,70,0.3);
+      border-radius: 7px;
+      color: #72ff91;
+      background: rgba(0,255,70,0.12);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
+    .secondary-button:hover {
+      background: rgba(0,255,70,0.18);
+    }
+
+    .note {
+      margin: 14px 0 0;
+      color: rgba(255,255,255,0.62);
+      text-align: center;
+      font-size: 0.78rem;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <main class="auth-card">
-    <div class="title-row">
-      <div class="icon-box">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2 20 5.5v6.2c0 4.7-3.2 8.9-8 10.3-4.8-1.4-8-5.6-8-10.3V5.5L12 2Zm0 4.1L8 7.8v3.9c0 2.4 1.5 4.8 4 6.1V6.1Z"/>
-        </svg>
+  <main class="card">
+    <section id="loginPanel">
+      <div class="title-row">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2 20 5.5v6.2c0 4.7-3.2 8.9-8 10.3-4.8-1.4-8-5.6-8-10.3V5.5L12 2Zm0 4.1L8 7.8v3.9c0 2.4 1.5 4.8 4 6.1V6.1Z"/>
+          </svg>
+        </div>
+        <h1>Authentication</h1>
       </div>
-      <h1>Authen<span>tication</span></h1>
-    </div>
 
-    <div class="field">
-      <input id="accessKey" type="password" placeholder="enter key" autocomplete="off">
-      <button class="lock" id="toggleKey" type="button" aria-label="Show key">
-        <svg id="lockIcon" viewBox="0 0 24 24">
-          <rect x="6" y="10" width="12" height="10" rx="2"></rect>
-          <path d="M8 10V8a4 4 0 0 1 8 0v2"></path>
-          <path d="M12 14v3"></path>
-        </svg>
-      </button>
-    </div>
+      <div class="field">
+        <input id="accessKey" type="password" placeholder="enter key" autocomplete="off">
+        <button class="lock" id="toggleKey" type="button" aria-label="Show key">
+          <svg id="lockIcon" viewBox="0 0 24 24">
+            <rect x="6" y="10" width="12" height="10" rx="2"></rect>
+            <path d="M8 10V8a4 4 0 0 1 8 0v2"></path>
+            <path d="M12 14v3"></path>
+          </svg>
+        </button>
+      </div>
 
-    <button class="auth-button" type="button">Authenticate</button>
-    <button class="key-button" type="button">Generate New Key</button>
-    <div class="divider"></div>
+      <button class="auth-button" type="button">Authenticate</button>
+      <button class="key-button" id="generateKeyButton" type="button">Generate New Key</button>
+      <div class="divider"></div>
+    </section>
+
+    <section id="keyPanel" class="hidden">
+      <div class="title-row">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2 20 5.5v6.2c0 4.7-3.2 8.9-8 10.3-4.8-1.4-8-5.6-8-10.3V5.5L12 2Zm0 4.1L8 7.8v3.9c0 2.4 1.5 4.8 4 6.1V6.1Z"/>
+          </svg>
+        </div>
+        <h1>Generate Key</h1>
+      </div>
+
+      <p class="label">Generated Access Key</p>
+      <div class="generated-key" id="generatedKey"></div>
+
+      <div class="button-row">
+        <button class="secondary-button" id="copyButton" type="button">Copy</button>
+        <button class="secondary-button" id="downloadButton" type="button">Download</button>
+      </div>
+
+      <button class="proceed-button" id="proceedButton" type="button">Proceed To Login</button>
+      <p class="note">Save this key securely before proceeding.</p>
+    </section>
   </main>
 
   <script>
+    const loginPanel = document.getElementById("loginPanel");
+    const keyPanel = document.getElementById("keyPanel");
     const accessKey = document.getElementById("accessKey");
     const toggleKey = document.getElementById("toggleKey");
     const lockIcon = document.getElementById("lockIcon");
+    const generateKeyButton = document.getElementById("generateKeyButton");
+    const generatedKey = document.getElementById("generatedKey");
+    const copyButton = document.getElementById("copyButton");
+    const downloadButton = document.getElementById("downloadButton");
+    const proceedButton = document.getElementById("proceedButton");
+
+    let currentKey = "";
+
+    function generateAccessKey() {
+      const bytes = new Uint8Array(32);
+      crypto.getRandomValues(bytes);
+
+      return Array.from(bytes)
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    function showKeyPanel() {
+      currentKey = generateAccessKey();
+      generatedKey.textContent = currentKey.slice(0, 32) + "\n" + currentKey.slice(32);
+      loginPanel.classList.add("hidden");
+      keyPanel.classList.remove("hidden");
+    }
+
+    function showLoginPanel() {
+      accessKey.value = "";
+      loginPanel.classList.remove("hidden");
+      keyPanel.classList.add("hidden");
+      accessKey.focus();
+    }
 
     toggleKey.addEventListener("click", () => {
       const isHidden = accessKey.type === "password";
@@ -267,6 +354,28 @@
         ? '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 7.5-2"></path><path d="M12 14v3"></path>'
         : '<rect x="6" y="10" width="12" height="10" rx="2"></rect><path d="M8 10V8a4 4 0 0 1 8 0v2"></path><path d="M12 14v3"></path>';
     });
+
+    generateKeyButton.addEventListener("click", showKeyPanel);
+
+    copyButton.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(currentKey);
+      copyButton.textContent = "Copied";
+      setTimeout(() => copyButton.textContent = "Copy", 1200);
+    });
+
+    downloadButton.addEventListener("click", () => {
+      const file = new Blob([currentKey], { type: "text/plain" });
+      const url = URL.createObjectURL(file);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "ixkhlm-access-key.txt";
+      link.click();
+
+      URL.revokeObjectURL(url);
+    });
+
+    proceedButton.addEventListener("click", showLoginPanel);
   </script>
 </body>
 </html>
